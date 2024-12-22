@@ -1,8 +1,25 @@
 import { Header } from "./components/header";
 import Content from "./components/content";
 import Total from "./components/total";
+import { useState } from "react";
+import Display from "./components/display";
+import Button from "./components/button";
 
 const App = () => {
+
+  const  [counter, setCounter] = useState(1);
+
+  // setTimeout(() => {
+  //   setCounter(counter + 1);
+  // }, 1000);
+
+  const handleClick = () => setCounter(counter * 2);
+  const handleToZero = () => setCounter(0);
+  const resetCounter = () => setCounter(1);
+  
+
+  console.log("Rendering: "+ counter);
+
   const courses = [
     {
       course: 'Half Stack application development',
@@ -42,6 +59,24 @@ const App = () => {
           )
         })
       }
+      <br />
+      <Display counter={counter} /> 
+      <br />
+      <Button   
+        onClick={handleClick} 
+        text="Duplicate value" 
+      />
+      <Button 
+        onClick={handleToZero} 
+        text="Set to Zero"
+      />
+      <br />
+      <Button 
+        onClick={resetCounter} 
+        text="Reset Counter"
+      />
+      <br />
+      
     </div>
   )
 }
