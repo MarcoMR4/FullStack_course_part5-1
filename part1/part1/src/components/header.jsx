@@ -3,9 +3,9 @@ export const Header = (props) => {
     console.log(props);
     return (
         <div>
-            <h1>
+            <p className="h1">
                 {props.course}
-            </h1>
+            </p>
         </div> 
     );
 };
