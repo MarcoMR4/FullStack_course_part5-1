@@ -9,7 +9,7 @@ const Course = ({name, parts, id}) => {
     }
 
     return (
-        <div>
+        <div className="mb-4">
             <Header header={name} />
             <br />
             <Content parts={parts} />
