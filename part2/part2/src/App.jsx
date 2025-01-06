@@ -2,9 +2,10 @@ import Note from "./components/note";
 import Course from "./components/Course";
 import Header from "./components/Header";
 import Contact from "./components/Contact";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import PeopleFilter from "./components/PeopleFilter";
 import PeopleForm from "./components/Peopleform";
+import axios from "axios";
 
 const App = ( props ) => {
 
@@ -78,6 +79,24 @@ const App = ( props ) => {
       ]
     }
   ]
+
+  // PART 2C
+  const [notes2, setNotes2] = useState([]);
+  const [newNote2, setNewNote2] = useState('');
+  const [showAll2, setShowAll2] = useState(true);
+
+  useEffect(() => {
+    console.log("Effect")
+    axios
+      .get("http://localhost:3001/notes")
+      .then(response => {
+        console.log('promise fullfilled! ')
+        setNotes(response.data)
+      })
+  },[])
+  console.log('render', notes.length, 'notes')
+
+
 
   const addNote = (event) => {
     event.preventDefault();
