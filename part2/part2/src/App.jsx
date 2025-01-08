@@ -5,7 +5,9 @@ import Contact from "./components/Contact";
 import { useState, useEffect } from "react";
 import PeopleFilter from "./components/PeopleFilter";
 import PeopleForm from "./components/Peopleform";
-import axios from "axios";
+import Note2 from "./components/Note2";
+import noteService from "./services/noteService";
+import People2 from "./components/People2";
 
 const App = ( props ) => {
 
@@ -87,14 +89,73 @@ const App = ( props ) => {
 
   useEffect(() => {
     console.log("Effect")
-    axios
-      .get("http://localhost:3001/notes")
-      .then(response => {
-        console.log('promise fullfilled! ')
-        setNotes(response.data)
+    // axios
+    //   .get("http://localhost:3001/notes")
+    //   .then(response => {
+    //     console.log('promise fullfilled! ')
+    //     setNotes2(response.data)
+    //   })
+    noteService
+      .getAll()
+      .then(initialNotes => {
+        setNotes2(initialNotes)
       })
   },[])
   console.log('render', notes.length, 'notes')
+
+  const notesToShow2 = showAll2
+  ? notes2
+  : notes2.filter(note => note.important === true);
+
+  const addNote2 = (event) => {
+    event.preventDefault()
+    const noteObject = {
+      content: newNote2,
+      important: Math.random() < 0.5,
+    }
+
+    // axios
+    // .post('http://localhost:3001/notes', noteObject)
+    // .then(response => {
+    //   console.log(response)
+    //   setNotes(notes.concat(response.data))
+    //   setNewNote('')
+    // })
+    noteService
+      .create(noteObject)
+      .then(returnedNote => {
+        setNotes2(notes2.concat(returnedNote))
+        setNewNote2('')
+      })
+  }
+
+  // const toggleImportanceOf = id => {
+  //   const url = `http://localhost:3001/notes/${id}`
+  //   const note = notes2.find(n => n.id === id)
+  //   const changedNote = { ...note, important: !note.important }
+  
+  //   axios.put(url, changedNote).then(response => {
+  //     setNotes2(notes2.map(note => note.id !== id ? note : response.data))
+  //   })
+  // }
+
+  const toggleImportanceOf = id => {
+    console.log("id es ", id)
+    const note = notes2.find(n => n.id === id)
+    const changedNote = { ...note, important: !note.important }
+
+    noteService
+      .update(id, changedNote)
+      .then(returnedNote => {
+        setNotes2(notes2.map(note => note.id !== id ? note : returnedNote))
+      })
+      .catch(error => {
+        alert(
+          `the note '${note.content}' was already deleted from server`
+        )
+        setNotes2(notes2.filter(n => n.id !== id))
+      })
+  }
 
 
 
@@ -113,6 +174,11 @@ const App = ( props ) => {
   const handleNoteChange = (event) => {
     console.log(event.target.value);
     setNewNote(event.target.value);
+  }
+
+  const handleNoteChange2 = (event) => {
+    console.log(event.target.value);
+    setNewNote2(event.target.value);
   }
 
   const [people, setPeople] = useState([
@@ -178,6 +244,45 @@ const App = ( props ) => {
   return (
     <>
     <div className="container p-2">
+
+    <div className="row border mb-2">
+
+        <div className="col-md-6 border">
+          <Header header="Notes from json server"/>
+          <div>
+            <button onClick = {() => setShowAll2(!showAll2)}>
+              show {showAll2 ? 'important' : 'all'}
+            </button>
+          </div>
+          <ul>
+            {notesToShow2.map(note => 
+              <Note2 
+                key = {note.id} 
+                note = {note} 
+                toggleImportance={() => toggleImportanceOf(note.id)}
+              />
+            )}
+          </ul>
+          <form onSubmit = {addNote2}>
+            <input 
+              value = {newNote2}
+              onChange = {handleNoteChange2}
+            />
+            <button type="submit">save</button>
+
+          </form>
+        </div>
+
+        <div className="col-md-6 border">
+          <Header header="Contacts from json server"/>
+          <People2 />
+          
+        </div>
+
+      </div>
+
+
+
       <div className = "row mb-3 border">
         <div className = "col-md-12">
           <Header header = "Contacts" />

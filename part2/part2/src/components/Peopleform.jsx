@@ -2,7 +2,7 @@
 const PeopleForm = ({addNewContact, handleNameChange, handleNumberChange}) => {
     
     return (
-        <div>
+        <div className="m-3">
                <form onSubmit={addNewContact}>
                     <div>
                         name: <input required onChange = {handleNameChange} />
