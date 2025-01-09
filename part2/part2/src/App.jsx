@@ -8,6 +8,8 @@ import PeopleForm from "./components/Peopleform";
 import Note2 from "./components/Note2";
 import noteService from "./services/noteService";
 import People2 from "./components/People2";
+import Notification from "./components/Notification";
+import Footer from "./components/layout/Footer";
 
 const App = ( props ) => {
 
@@ -148,11 +150,15 @@ const App = ( props ) => {
       .update(id, changedNote)
       .then(returnedNote => {
         setNotes2(notes2.map(note => note.id !== id ? note : returnedNote))
+        setErrorMessage('')
       })
       .catch(error => {
-        alert(
-          `the note '${note.content}' was already deleted from server`
+        setErrorMessage(
+          `Note '${note.content}' was already removed from server ${error}`
         )
+        setTimeout(() => {
+          setErrorMessage('')
+        }, 5000)
         setNotes2(notes2.filter(n => n.id !== id))
       })
   }
@@ -239,6 +245,9 @@ const App = ( props ) => {
       ))
     }
   }
+
+  const [errorMessage, setErrorMessage] = useState('');
+
   
 
   return (
@@ -250,6 +259,7 @@ const App = ( props ) => {
         <div className="col-md-6 border">
           <Header header="Notes from json server"/>
           <div>
+            <Notification message={errorMessage} />
             <button onClick = {() => setShowAll2(!showAll2)}>
               show {showAll2 ? 'important' : 'all'}
             </button>
@@ -337,7 +347,7 @@ const App = ( props ) => {
 
     </div>
    
-
+    <Footer />
     </>
     
   )

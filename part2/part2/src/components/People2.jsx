@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 import Contact2 from "./Contact2";
 import PeopleForm from "./Peopleform";
 import PeopleFilter from "./PeopleFilter";
+import NotificacionAdd from "./NotificacionAdd";
+import Notification from "./Notification";
 
 const People2 = () => {
 
@@ -12,6 +14,9 @@ const People2 = () => {
     const [newName, setNewName] = useState('')
     const [newNumber, setNewNumber] = useState('')
     const [filter, setFilter] = useState('')
+
+    const [addingName, setAddingName] = useState('')
+    const [errorNotification, setErrorNotificacion] = useState('')
 
     useEffect(() => {
 
@@ -64,6 +69,10 @@ const People2 = () => {
             };
             peopleService.create(newContact)
                 .then(returnedPerson => {
+                    setAddingName(newName);
+                    setTimeout(() => {
+                        setAddingName('')
+                    }, 3000)
                     setPeople(people.concat(returnedPerson));
                     setNewName('');
                     setNewNumber('');
@@ -108,7 +117,11 @@ const People2 = () => {
                 })
                 .catch(error => {
                     console.log(`Error: ${error}`)
-                    alert("It has ocurred an error to delete this contact")
+                    setErrorNotificacion("Error, this contact doesn't exist in the server....")
+                    setTimeout(() => {
+                        setErrorNotificacion('');
+                        setPeople(people.filter(person => person.id !== idPerson));
+                    }, 2000)
                 })
         }
     }
@@ -139,6 +152,9 @@ const People2 = () => {
 
     return (
         <div className='overflow-auto'>
+
+            <NotificacionAdd name = {addingName} />
+            <Notification message = {errorNotification} />
 
             <PeopleFilter filter = {handleFilterContacts} />    
 

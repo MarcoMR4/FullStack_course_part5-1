@@ -3,7 +3,7 @@
     {
       "id": "1",
       "content": "HTML is easy",
-      "important": true
+      "important": false
     },
     {
       "id": "2",
@@ -29,6 +29,11 @@
       "id": "8408",
       "content": "Hi",
       "important": true
+    },
+    {
+      "id": "8efb",
+      "content": "new Note",
+      "important": false
     }
   ],
   "persons": [
@@ -63,9 +68,9 @@
       "number": "3412341324"
     },
     {
-      "id": "e6de",
-      "name": "Mark Market2",
-      "number": "443-5676899"
+      "id": "3b3e",
+      "name": "Carl Jhonson",
+      "number": "55-435431514"
     }
   ]
 }
