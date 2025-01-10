@@ -10,6 +10,8 @@ import noteService from "./services/noteService";
 import People2 from "./components/People2";
 import Notification from "./components/Notification";
 import Footer from "./components/layout/Footer";
+import Currency from "./components/Currency";
+import Countries from "./components/Countries";
 
 const App = ( props ) => {
 
@@ -253,6 +255,21 @@ const App = ( props ) => {
   return (
     <>
     <div className="container p-2">
+
+    <div className = "row border mb-2">
+      <div className="col-md-6 border">
+        <Header header="Currency exchange"/>
+        <Currency />
+
+      </div>
+
+      <div className = "col md-6 border">
+        <Header header="Countries" />
+        <Countries />
+
+      </div>
+
+    </div>
 
     <div className="row border mb-2">
 
