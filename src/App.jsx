@@ -4,6 +4,7 @@ import Notification from './components/Notification'
 import Footer from './components/Footer'
 import noteService from './services/notes'
 import loginService from './services/login'
+import Blogs from './components/Blogs'
 
 const App = () => {
   const [notes, setNotes] = useState([])
@@ -30,16 +31,6 @@ const App = () => {
         setNotes(initialNotes)
       })
   }, [])
-
-  useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem('loggedNoteappUser')
-    if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON)
-      setUser(user)
-      noteService.setToken(user.token)
-    }
-  }, [])
-
 
   const addNote = (event) => {
     event.preventDefault()
@@ -95,12 +86,18 @@ const App = () => {
       setUser(user)
       setUsername('')
       setPassword('')
+      window.location.reload()
     } catch (exception) {
       setErrorMessage('Wrong credentials')
       setTimeout(() => {
         setErrorMessage(null)
       }, 5000)
     }
+  }
+
+  const handleLogout = () => {
+    localStorage.clear()
+    window.location.reload()
   }
 
   const notesToShow = showAll
@@ -142,33 +139,41 @@ const App = () => {
   )
 
   return (
-    <div>
-      <h1>Notes</h1>
-      <Notification message={errorMessage} />
+    <div className = "container p-3">
+      <div className = "row">
+        <div className = "col-md-6">
+          <h1>Notes</h1>
+          <Notification message={errorMessage} error={true} />
 
-      {user === null ?
-        loginForm() :
-        <div>
-          <p>{user.name} logged-in</p>
-          {noteForm()}
+          {user === null ?
+            loginForm() :
+            <div>
+              <p>{user.name} logged-in</p> 
+              <button onClick={handleLogout} className="mb-3">Logout</button>
+              {noteForm()}
+            </div>
+          }
+
+          <div>
+            <button onClick={() => setShowAll(!showAll)}>
+              show {showAll ? 'important' : 'all' }
+            </button>
+          </div>      
+          <ul>
+            {notesToShow.map(note => 
+              <Note
+                key={note.id}
+                note={note}
+                toggleImportance={() => toggleImportanceOf(note.id)}
+              />
+            )}
+          </ul>
+          <Footer />
         </div>
-      }
-
-      <div>
-        <button onClick={() => setShowAll(!showAll)}>
-          show {showAll ? 'important' : 'all' }
-        </button>
-      </div>      
-      <ul>
-        {notesToShow.map(note => 
-          <Note
-            key={note.id}
-            note={note}
-            toggleImportance={() => toggleImportanceOf(note.id)}
-          />
-        )}
-      </ul>
-      <Footer />
+        <div className = "col-md-6">
+            <Blogs />
+        </div>
+      </div>
     </div>
   )
 }
