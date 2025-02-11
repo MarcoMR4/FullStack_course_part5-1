@@ -1,7 +1,10 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import blogService from '../services/blogs'
 import Blog from "./Blog"
 import Notification from "./Notification"
+import BlogForm from "./BlogForm"
+import Togglable from "./Togglable"
+
 
 const Blogs = () => {
 
@@ -13,6 +16,9 @@ const Blogs = () => {
     const [notification, setNotification] = useState(null)
     const [errorNotification, setErrorNotification] = useState(false)
     const [idToUpdate, setIdToUpdate] = useState(null) 
+    const [updating, setUpdating] = useState(false)
+
+    const blogFormRef = useRef()
 
     useEffect(() => {
         blogService
@@ -32,19 +38,14 @@ const Blogs = () => {
     }, [])
     
 
-    const addBlog = (event) => {
-        event.preventDefault()
-        const blogObject = {
-            title: newBlog,
-            url: url,
-            author: author
-        }
+    const addBlog = (blogObject) => {
+        blogFormRef.current.toggleVisibility()
 
         if(idToUpdate !== null){
             blogService
                 .update(idToUpdate, blogObject)
                 .then(updatedBlog => {
-                    setNotification(`Blog ${idToUpdate} updated`)
+                    setNotification(`Blog ${blogObject.title} updated`)
                     setBlogs(blogs.map(blog => 
                         blog.id === idToUpdate ? updatedBlog : blog
                     ));
@@ -68,10 +69,11 @@ const Blogs = () => {
                 })
         }
         else{
+            setUpdating(false)
             blogService
             .create(blogObject)
             .then(returnedBlog => {
-                setNotification(`Blog ${newBlog} by ${author} added successfully! `)
+                setNotification(`Blog ${blogObject.title} by ${blogObject.author} added successfully! `)
                 setBlogs(blogs.concat(returnedBlog))
                 setNewBlog('')
                 setAuthor('')
@@ -90,18 +92,6 @@ const Blogs = () => {
                 }, 3000)
             })
         }  
-    }
-
-    const handleBlogChange = (event) => {
-        setNewBlog(event.target.value)
-    }
-
-    const handleAuthorChange = (event) => {
-        setAuthor(event.target.value)
-    }
-
-    const handleUrlChange = (event) => {
-        setUrl(event.target.value)
     }
 
     const handleDeleteBlog = (idToDelete) => {
@@ -132,6 +122,8 @@ const Blogs = () => {
         setAuthor(author)
         setNewBlog(title)
         setUrl(url)
+        setUpdating(true)
+        blogFormRef.current.toggleVisibility()
     }
 
     const handleLikeBlog = (id) => {
@@ -171,32 +163,6 @@ const Blogs = () => {
             })
     }
 
-    const blogForm = () => (
-        <form onSubmit={addBlog}>
-            Title:
-          <input
-            value={newBlog}
-            onChange={handleBlogChange}
-            required
-          />
-          <br />
-          Author:
-          <input
-            value={author}
-            onChange={handleAuthorChange}
-            required
-          />
-          <br />
-          Url:
-          <input
-            value={url}
-            onChange={handleUrlChange}
-            required
-          />
-          <br />
-          <button type="submit">save</button>
-        </form>  
-    )
 
     if (user === null) {
         return (
@@ -213,7 +179,16 @@ const Blogs = () => {
             {user === null ?
                 <div> You must be logged to add Blogs </div>:
                 <div>
-                {blogForm()}
+                <Togglable buttonLabel='new blog' ref={blogFormRef}>
+                    <BlogForm
+                        createBlog={addBlog}
+                        updateTitle={newBlog}
+                        updateAuthor={author}
+                        updateUrl={url}
+                        updating={updating}
+                        idToUpdate={idToUpdate}
+                    />
+                </Togglable>
                 </div>
             }
 
