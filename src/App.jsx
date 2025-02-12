@@ -9,7 +9,6 @@ import LoginForm from './components/LoginForm'
 import NoteForm from './components/NoteForm'
 import Togglable from './components/Togglable'
 
-// (untill ex 5.11)
 
 const App = () => {
   const [notes, setNotes] = useState([])

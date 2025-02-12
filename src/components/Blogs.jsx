@@ -99,8 +99,10 @@ const Blogs = () => {
     }
 
     const handleDeleteBlog = (idToDelete) => {
-        console.log(idToDelete)
-        blogService
+        const sure = window.confirm('Do you want to delete this blog? ')
+
+        if(sure){
+            blogService
             .deleteBlog(idToDelete)
             .then((response) => {
                 console.log('Blog deleted successfully ',response)
@@ -119,6 +121,11 @@ const Blogs = () => {
                     setErrorNotification(false)
                 }, 2000)
             })
+        }  
+        setNotification('ok...')
+        setTimeout(() => {
+            setNotification(null)
+        }, 2000)
     }
 
     const handleUpdateBlog = (id, title, author, url) => {
