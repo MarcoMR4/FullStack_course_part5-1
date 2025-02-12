@@ -23,7 +23,11 @@ const Blogs = () => {
     useEffect(() => {
         blogService
             .getAll()
-            .then(initialBlogs => setBlogs(initialBlogs))
+            .then(initialBlogs => 
+            {
+                initialBlogs.sort((a, b) => b.likes - a.likes);
+                setBlogs(initialBlogs)
+            })
             .catch(error => console.log(`It has occurred an error: ${error}`))
 
     }, [])

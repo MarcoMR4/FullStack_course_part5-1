@@ -9,8 +9,7 @@ import LoginForm from './components/LoginForm'
 import NoteForm from './components/NoteForm'
 import Togglable from './components/Togglable'
 
-// OPCION PARA MOSTRAR CADA BLO
-// Corregir poder actulizar notas important
+// (untill ex 5.11)
 
 const App = () => {
   const [notes, setNotes] = useState([])
@@ -65,6 +64,18 @@ const App = () => {
         setTimeout(() => {
           setErrorMessage(null)
         }, 5000)
+      })
+  }
+
+  const handleDeleteNote = id => {
+    noteService
+      .deleteNote(id)
+      .then(response => {
+        setErrorMessage('Note deleted successfully! ')
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 2000)
+        setNotes(notes.filter(note => note.id !== id))
       })
   }
 
@@ -164,6 +175,7 @@ const App = () => {
                 key={note.id}
                 note={note}
                 toggleImportance={() => toggleImportanceOf(note.id)}
+                handleDeleteNote = {() => handleDeleteNote(note.id)}
               />
             )}
           </ul>
