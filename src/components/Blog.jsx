@@ -14,7 +14,7 @@ const Blog = ({title, author, url, likes, handleDeleteBlog, handleUpdateBlog, ha
         <div className = "mt-2">
             <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                 <h5 style={{ margin: 0 }}>{title}</h5>
-                <button style={{ padding: "4px 8px", fontSize: "12px", border: "none" }} onClick={handleShowDetails}>
+                <button id='showBlog' style={{ padding: "4px 8px", fontSize: "12px", border: "none" }} onClick={handleShowDetails}>
                     {showDetails ? "hide" : "view"}
                 </button>
             </div>
